@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.apache.tomcat.jdbc.pool.DataSource;
@@ -23,6 +24,12 @@ public class MemberDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    public List<Member> selectByRegdate(LocalDateTime from, LocalDateTime to){
+        String sql = "select * from member where regdate between ? and ? order by regdate desc";
+        return jdbcTemplate.query(sql, new MemberRowMapper(), from , to);
+    }
+
+    
 	/* 결과가 1개 이상인 경우 */
     public Member selectByEmail(String email) {
         List<Member> results = jdbcTemplate.query("select * from member where email = ?", new MemberRowMapper(), email);
